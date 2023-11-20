@@ -75,7 +75,7 @@ export default function App() {
 
 function TaskList({ x, task, id ,setX}) {
   const [y, setY] = useState(true);
- 
+  const [checkTodo,setCheckTodo]=useState(false);
 
  /*  async function handleDelete(id) {
     console.log(id);
@@ -91,13 +91,39 @@ function TaskList({ x, task, id ,setX}) {
     })
   }; */
 
+  async function handleUpdate(e){
+    e.preventDefault();
+   let res=await fetch(`http://127.0.0.1:8080/api/todos/${x}`,{
+      method:'PUT',
+      // mode: 'cors',
+      // credentials:'origin',
+      body:JSON.stringify({
+        id:x,
+        title:task.title,
+        description:task.description,
+        completed:checkTodo
+      })
+    });
+    let data =res.json();
+    console.log(data);
+  }
 
   return (
 
-    <li key={id} >
+    <li key={id} > <p><input type='checkbox' onChange={(e)=>{
+      handleUpdate();
+     return setCheckTodo(e.target.checked);
+    }} checked={checkTodo}/></p>
+    {checkTodo?<> 
+        <p className='strike'><span className='strike'  >Title:</span>{task.title}</p>
+        <p className='strike'><span className='strike' >Description:</span>{task.description}</p>
+          <button onClick={() => {
+            setY(!y)
+          }
+          } className='button1'>Edit</button></>:<>
       {y ?
         <> 
-        <p ><span className='text'>Title:</span>{task.title}</p>
+        <p ><span className='text' >Title:</span>{task.title}</p>
         <p ><span className='text'>Description:</span>{task.description}</p>
           <button onClick={() => {
             setY(!y)
@@ -106,7 +132,7 @@ function TaskList({ x, task, id ,setX}) {
         <>
            <UpdateTodo taskId={x} setY={setY} setX={setX}/>
         </>
-      }
+      }</>}
       {/* <button onClick={(e) => handleDelete(x)} className='button1'>Delete</button> */}
     </li>
   )

@@ -61,3 +61,8 @@ padding: 3px;
   color: rgb(23, 69, 109);
   margin-right: 10px;
 }
+.strike{
+  text-decoration-line: line-through;
+  color: rgb(23, 69, 109);
+  margin-right: 10px;
+}
